@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "735023225961",
+    "firebase_url": "https://authentication-c56c0-default-rtdb.firebaseio.com",
+    "project_id": "authentication-c56c0",
+    "storage_bucket": "authentication-c56c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735023225961:android:0fcbac886450623fb596f8",
+        "android_client_info": {
+          "package_name": "com.example.myaquaponic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735023225961-ui4r8l7s2tjfk0okqfjio8ot47drseoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myaquaponic",
+            "certificate_hash": "5e33b18b3576f57e4f6bfe3e623d7cf6606ebc27"
+          }
+        },
+        {
+          "client_id": "735023225961-2gi8eu34c4e5a3ipes1d0shs1bl7137d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6EBPjEhXT1zHUA3H2Z1LjdAnROeB8kOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735023225961-2gi8eu34c4e5a3ipes1d0shs1bl7137d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
