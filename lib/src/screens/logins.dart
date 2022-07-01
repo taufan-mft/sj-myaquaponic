@@ -187,10 +187,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: TextButton(
                                 style: TextButton.styleFrom(
                                     shape: StadiumBorder(),
-                                    backgroundColor: Color(0xff123456)),
+                                    backgroundColor: Colors.yellow),
                                 child: Text(
                                   "Masuk",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Colors.black),
                                 ),
                                 onPressed: () async {
                                   if (formkey.currentState!.validate()) {
@@ -250,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Text(
                                     "Belum punya akun?",
                                     style: TextStyle(
-                                        fontSize: 20, color: Colors.black87),
+                                        fontSize: 18, color: Colors.black87),
                                   ),
                                   SizedBox(width: 10),
                                   Hero(
@@ -258,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     child: Text(
                                       'Daftar',
                                       style: TextStyle(
-                                          fontSize: 21,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black),
                                     ),

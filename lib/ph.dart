@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:myaquaponic/chart/chart.dart';
 import 'package:myaquaponic/chart/chart_container.dart';
 import 'package:myaquaponic/chart/line_chart.dart';
+import 'package:myaquaponic/start.dart';
 
 class PhPages extends StatefulWidget {
   State<PhPages> createState() => _PhPagesState();
@@ -36,7 +37,7 @@ class _PhPagesState extends State<PhPages> {
             "pH",
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.lightBlue.shade300,
           leading: IconButton(
             icon: GestureDetector(
               child: Icon(
@@ -187,9 +188,7 @@ class _PhPagesState extends State<PhPages> {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return ChartPage(
-                                title: 'Grafik',
-                              );
+                              return StartPages();
                             }));
                           },
                           child: Text("Lihat grafik",

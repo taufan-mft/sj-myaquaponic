@@ -29,7 +29,7 @@ class _TanamanPagesState extends State<TanamanPages> {
           "Tanaman",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.lightBlue.shade300,
         leading: IconButton(
           icon: GestureDetector(
             child: Icon(

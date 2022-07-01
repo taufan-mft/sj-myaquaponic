@@ -1,11 +1,9 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myaquaponic/Kamera.dart';
 import 'package:myaquaponic/dashboard.dart';
-
 import 'package:myaquaponic/other.dart';
 
 class NavPage extends StatefulWidget {
@@ -19,9 +17,7 @@ class _NavPageState extends State<NavPage> {
 
   List<Widget> _listPages = [
     Dashboard(),
-    // LoadFirbaseStorageImage(),
     CameraPage(),
-    // ImageGrid(),
     OtherPage(),
   ];
 
@@ -45,18 +41,31 @@ class _NavPageState extends State<NavPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _listPages[_page],
-        bottomNavigationBar: FancyBottomNavigation(
-          tabs: [
-            TabData(iconData: Icons.home, title: "Dashboard"),
-            TabData(iconData: Icons.camera_alt_outlined, title: "Kamera"),
-            TabData(iconData: Icons.grid_view, title: "Lainnya")
-          ],
-          onTabChangedListener: (position) {
-            setState(() {
-              _page = position;
-            });
-          },
-        ));
+      body: _listPages[_page],
+      bottomNavigationBar: BottomNavyBar(
+        selectedIndex: _page,
+        onItemSelected: (index) {
+          setState(() {
+            _page = index;
+          });
+        },
+        items: <BottomNavyBarItem>[
+          BottomNavyBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+            activeColor: Colors.blueAccent,
+            // inactiveColor: Colors.black,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.camera_alt_outlined),
+            title: Text('Kamera'),
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.grid_view),
+            title: Text('Lainnya'),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:myaquaponic/Kamera.dart';
 import 'package:myaquaponic/ketinggianair.dart';
@@ -124,6 +125,11 @@ class Dashboard extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.normal)),
                     ),
+                    ElevatedButton(onPressed: () async {
+                      final storageRef = FirebaseStorage.instance.ref().child("pictures/image4.jpg");
+                      var url = await storageRef.getDownloadURL();
+                      print(url);
+                    }, child: Text('morin')),
                     Padding(
                       padding: const EdgeInsets.only(top: 60, left: 30),
                       child: Text("Dashboard",

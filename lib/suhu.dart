@@ -1,9 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:getwidget/types/gf_progress_type.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 class SuhuPages extends StatefulWidget {
   const SuhuPages({Key? key}) : super(key: key);
@@ -12,29 +11,157 @@ class SuhuPages extends StatefulWidget {
   State<SuhuPages> createState() => _SuhuPagesState();
 }
 
-class _SuhuPagesState extends State<SuhuPages> {
-  // bool isLoading = false;
-  final ref = FirebaseDatabase.instance.reference().child("suhu");
-  // final dbR = FirebaseDatabase.instance.reference();
+Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  const style = TextStyle(
+    color: Color(0xff68737d),
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
+  var dt = DateTime.fromMillisecondsSinceEpoch((value*1000000000).toInt()).toLocal();
 
-  // var intValue;
+// 12 Hour format:
+  var d12 = DateFormat('hh:mm').format(dt);
+print(value);
+  return SideTitleWidget(
+    axisSide: meta.axisSide,
+    space: 8.0,
+    child: Text(d12, style: style,),
+  );
+}
+
+Widget leftTitleWidgets(double value, TitleMeta meta) {
+  const style = TextStyle(
+    color: Color(0xff67727d),
+    fontWeight: FontWeight.bold,
+    fontSize: 15,
+  );
+  String text;
+  switch (value.toInt()) {
+    case 5:
+      text = '5C';
+      break;
+    case 10:
+      text = '10C';
+      break;
+    case 15:
+      text = '15C';
+      break;
+    case 20:
+      text = '20C';
+      break;
+    case 30:
+      text = '30C';
+      break;
+    case 40:
+      text = '40C';
+      break;
+    default:
+      return Container();
+  }
+
+  return Text(text, style: style, textAlign: TextAlign.left);
+}
+
+class _SuhuPagesState extends State<SuhuPages> {
+  final ref = FirebaseDatabase.instance.reference().child("suhu");
+
+  List<FlSpot> tempsPoint = [];
 
   @override
-  // void initState() {
-  //   super.initState();
+  void initState() {
+    super.initState();
+    ref.onValue.listen((event) {
+      print('temperature');
+      final data = event.snapshot.value;
+      print(data['suhu']);
+      tempsPoint.add(FlSpot(DateTime.now().toUtc().millisecondsSinceEpoch/1000000000, double.parse(data['suhu'].toString())));
+      setState(() {
+        print(tempsPoint.length.toString());
+      });
+    });
+  }
 
-  //   dbR.child('Node1').once().then((DataSnapshot snapshot) {
-  //     double temp = snapshot.value['distance'];
+  List<Color> gradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
+  ];
 
-  //     isLoading = true;
-  //   });
-  // }
-
-  // onUpdate() {
-  //   setState(() {
-  //     value = !value;
-  //   });
-  // }
+  LineChartData mainData() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 28,
+            interval: ((1656552368342/1000000000)-(1656551176404/1000000000)),
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: const Color(0xff37434d), width: 1)),
+      lineBarsData: [
+        LineChartBarData(
+          spots: tempsPoint,
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: gradientColors,
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: gradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +171,7 @@ class _SuhuPagesState extends State<SuhuPages> {
           "Suhu",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.lightBlue.shade300,
         leading: IconButton(
           icon: GestureDetector(
             child: Icon(
@@ -58,139 +185,26 @@ class _SuhuPagesState extends State<SuhuPages> {
           },
         ),
       ),
-      body: FirebaseAnimatedList(
-          query: ref,
-          itemBuilder: (context, snapshot, animation, index) {
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 100, left: 50),
-                          child: Image.asset("images/suhu2.png",
-                              width: 200, height: 200),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, top: 60),
-                          child: Column(
-                            children: [
-                              Text(
-                                "Suhu",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 18),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Text(
-                                  snapshot.value.toString(),
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w800),
-                                ),
-                              ),
-                              // Padding(
-                              //   padding:
-                              //       const EdgeInsets.only(top: 50, left: 10),
-                              //   child: Text(
-                              //     "Water Heater",
-                              //     style: TextStyle(
-                              //         fontWeight: FontWeight.normal,
-                              //         fontSize: 18),
-                              //   ),
-                              // ),
-                              // Padding(
-                              //   padding: const EdgeInsets.only(top: 10),
-                              //   child: Text(
-                              //     "ON",
-                              //     style: TextStyle(
-                              //         fontSize: 25,
-                              //         fontWeight: FontWeight.w800),
-                              //   ),
-                              // ),
-
-                              // SizedBox(
-                              //   height: 20,
-                              // ),
-                              // FloatingActionButton.extended(
-                              //   onPressed: () {
-                              //     setState(() {
-                              //       dbR.child("LightState").set({"switch": value});
-                              //       value = !value;
-                              //     });
-                              //   },
-                              //   label: value ? Text('ON') : Text('OFF'),
-                              //   elevation: 20,
-                              //   backgroundColor: value ? Colors.blue : Colors.grey,
-                              // ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Image.asset("images/parametersuhu.png"),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    // Container(
-                    //     padding: EdgeInsets.all(15),
-                    //     child: Table(
-                    //       border: TableBorder.all(
-                    //           width: 1, color: Colors.black45), //table border
-                    //       children: [
-                    //         TableRow(children: [
-                    //           TableCell(child: Text("Nilai Suhu")),
-                    //           TableCell(child: Text("Range Suhu Ideal")),
-                    //           TableCell(child: Text("Status")),
-                    //           TableCell(child: Text("Keterangan"))
-                    //         ]),
-                    //         TableRow(children: [
-                    //           TableCell(child: Text("1.")),
-                    //           TableCell(child: Text("Krishna Karki")),
-                    //           TableCell(child: Text("Nepal, Kathmandu")),
-                    //           TableCell(child: Text("Nepal"))
-                    //         ]),
-                    //         TableRow(children: [
-                    //           TableCell(child: Text("2.")),
-                    //           TableCell(child: Text("John Wick")),
-                    //           TableCell(child: Text("New York, USA")),
-                    //           TableCell(child: Text("USA"))
-                    //         ]),
-                    //         TableRow(children: [
-                    //           TableCell(child: Text("3.")),
-                    //           TableCell(child: Text("Fedrick May")),
-                    //           TableCell(child: Text("Berlin, Germany")),
-                    //           TableCell(child: Text("Germany"))
-                    //         ]),
-                    //       ],
-                    //     )),
-                    // GFProgressBar(
-                    //     percentage: 0.9,
-                    //     width: 100,
-                    //     radius: 90,
-                    //     type: GFProgressType.circular,
-                    //     backgroundColor: Colors.black26,
-                    //     progressBarColor: GFColors.DANGER)
-
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 5, bottom: 20),
-                    //   child: Image.asset(
-                    //     "images/grafiksuhu.png",
-                    //     width: MediaQuery.of(context).size.height / 1,
-                    //     height: MediaQuery.of(context).size.height / 3,
-                    //   ),
-                    // )
-                  ],
+      body: Padding(
+        padding: const EdgeInsets.all(0),
+        child: AspectRatio(
+          aspectRatio: 1.70,
+          child: Container(
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(18),
                 ),
+                color: Color(0xff232d37)),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  right: 18.0, left: 12.0, top: 24, bottom: 12),
+              child: LineChart(
+                mainData(),
               ),
-            );
-          }),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

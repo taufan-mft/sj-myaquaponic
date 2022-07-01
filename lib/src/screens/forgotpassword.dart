@@ -111,11 +111,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                   height: 50,
                   child: TextButton(
                     style: TextButton.styleFrom(
-                        shape: StadiumBorder(),
-                        backgroundColor: Color(0xff123456)),
+                        shape: StadiumBorder(), backgroundColor: Colors.yellow),
                     child: Text(
                       "Lanjutkan",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     ),
                     onPressed: () {
                       _auth.sendPasswordResetEmail(email: _email);

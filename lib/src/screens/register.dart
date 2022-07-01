@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -28,6 +30,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final registkey = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   late String _email;
   late String _password;
@@ -63,33 +66,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Text(
-                "Create New Account",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                textAlign: TextAlign.center,
-              ),
-              // Image.asset(
-              //   'images/logo.png',
-              //   width: MediaQuery.of(context).size.width,
-              //   height: MediaQuery.of(context).size.height / 4.5,
-              // ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Text(
-                  "Nama",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
-                  obscureText: true,
-                  onChanged: (value) {
-                    _password = value;
-                  },
-                  decoration:
-                      kTextFieldDecoration.copyWith(hintText: 'Masukkan Nama')),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
@@ -113,23 +89,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
                   "Kata Sandi",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
-                  obscureText: true,
-                  onChanged: (value) {
-                    _password = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Masukkan Kata Sandi')),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Text(
-                  "Konfirmasi Kata Sandi",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
